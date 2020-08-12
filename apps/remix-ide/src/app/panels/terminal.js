@@ -1,4 +1,6 @@
 /* global Node, requestAnimationFrame */
+import { LibraryPlugin } from '@remixproject/engine'
+
 var yo = require('yo-yo')
 var javascriptserialize = require('javascript-serialize')
 var jsbeautify = require('js-beautify')
@@ -16,7 +18,6 @@ var TxLogger = require('../../app/ui/txLogger')
 var csjs = require('csjs-inject')
 
 var css = require('./styles/terminal-styles')
-import { Plugin } from '@remixproject/engine'
 import * as packageJson from '../../../package.json'
 
 var packageV = require('../../../package.json')
@@ -28,18 +29,22 @@ function register (api) { KONSOLES.push(api) }
 var ghostbar = yo`<div class=${css.ghostbar} bg-secondary></div>`
 
 const profile = {
-  displayName: 'Terminal',
   name: 'terminal',
-  methods: [],
+  displayName: 'Terminal',
+  description: 'log and debug transactions',
+  kind: 'terminal',
+  documentation: 'https://remix-ide.readthedocs.io/en/latest/run.html',
+  version: packageJson.version,
+  permission: true,
   events: [],
-  description: ' - ',
-  version: packageJson.version
+  methods: ['logHtml', 'logTx']
 }
 
-class Terminal extends Plugin {
-  constructor (opts, api) {
-    super(profile)
+class Terminal extends LibraryPlugin {
+  constructor (opts, api, pluginTerminal) {
+    super(pluginTerminal, profile)
     var self = this
+    pluginTerminal.terminal = self
     self.event = new EventManager()
     self.blockchain = opts.blockchain
     self._api = api

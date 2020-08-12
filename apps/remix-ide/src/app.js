@@ -23,6 +23,7 @@ var CompilerImport = require('./app/compiler/compiler-imports')
 
 const Blockchain = require('./blockchain/blockchain.js')
 const PluginUDapp = require('./blockchain/pluginUDapp.js')
+const PluginTerminal = require('./app/panels/pluginTerminal')
 
 const PluginManagerComponent = require('./app/components/plugin-manager-component')
 const CompilersArtefacts = require('./app/compiler/compiler-artefacts')
@@ -281,6 +282,7 @@ Please make a backup of your contracts and start using http://remix.ethereum.org
 
   // -------------------Terminal----------------------------------------
 
+  const pluginTerminal = new PluginTerminal()
   const terminal = new Terminal(
     { appManager, blockchain },
     {
@@ -292,7 +294,8 @@ Please make a backup of your contracts and start using http://remix.ethereum.org
         newpos = (newpos < height - limitDown) ? newpos : height - limitDown
         return height - newpos
       }
-    }
+    },
+    pluginTerminal
   )
   makeUdapp(blockchain, compilersArtefacts, (domEl) => terminal.logHtml(domEl))
 
